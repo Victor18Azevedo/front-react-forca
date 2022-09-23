@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import palavras from "./palavras";
-// import Footer from "./Footer";
-// import Navbar from "./Navbar";
 
 let palavraArraySemAcento;
-let tamanhoPalavra;
 let tentativasErradas;
-let tentativasCertas;
-let terminoDeJogo = false;
 let palavra;
 
 export default function App() {
@@ -63,40 +58,52 @@ export default function App() {
     str = str.replace(/[òóôõö]/, "o");
     str = str.replace(/[ùúûũü]/, "u");
     str = str.replace(/[ç]/, "c");
-
     return str;
   };
 
   const [iniciou, setIniciou] = useState(false);
   const [palavraArray, setPalavraArray] = useState([]);
-  const [letrasClicadas, setLetrasClicadas] = useState([...alfabeto]);
   const [resultado, setResultado] = useState();
   const [forca, setForca] = useState(forcas[0]);
+  const [letrasClicadas, setLetrasClicadas] = useState([...alfabeto]);
   const [textoChute, setTextoChute] = useState("");
   const [perdeu, setPerdeu] = useState(false);
   const [ganhou, setGanhou] = useState(false);
 
-  const iniciarJogo = () => {
-    palavra = sample(palavras);
-    const novaPalavraArray = Array.from(palavra.toUpperCase());
-    palavraArraySemAcento = novaPalavraArray.map(retiraAcento);
-    tamanhoPalavra = palavraArraySemAcento.length;
-    setPalavraArray([...novaPalavraArray]);
-    setResultado(palavraArraySemAcento.map(() => "_"));
-
-    //Condicao Inicial
-    setLetrasClicadas([]);
-    setIniciou(true);
+  const condicaoInicial = function () {
     tentativasErradas = 0;
-    setForca(forcas[tentativasErradas]);
+    setForca(forcas[0]);
+    setLetrasClicadas([]);
     setGanhou(false);
     setPerdeu(false);
     setTextoChute("");
-    terminoDeJogo = false;
+  };
 
-    console.log(palavraArraySemAcento);
-    console.log(novaPalavraArray);
-    console.log(tentativasErradas);
+  const finalizarJogo = function (status) {
+    setResultado(palavraArray.map((letra) => letra));
+    setLetrasClicadas([...alfabeto]);
+    if (status === "ganhou") {
+      console.log("FIM DE JOGO - GANHOU");
+      setGanhou(true);
+    } else {
+      console.log("FIM DE JOGO - PERDEU");
+      setForca(forcas[maxErros]);
+      setPerdeu(true);
+    }
+  };
+
+  const iniciarJogo = () => {
+    setIniciou(true);
+
+    palavra = sample(palavras);
+    const novaPalavraArray = Array.from(palavra.toUpperCase());
+    setPalavraArray([...novaPalavraArray]);
+
+    palavraArraySemAcento = novaPalavraArray.map(retiraAcento);
+    setResultado(novaPalavraArray.map(() => "_"));
+
+    condicaoInicial();
+    console.log(palavra);
   };
 
   const sugestao = (letraSugerida) => {
@@ -112,43 +119,25 @@ export default function App() {
           : letra
       );
       setResultado(novoResultado);
-      const ganhou = !novoResultado.includes("_") ? true : false;
-      if (ganhou) {
-        console.log("FIM DE JOGO - GANHOU");
-        terminoDeJogo = true;
-        setLetrasClicadas([...alfabeto]);
-        setGanhou(true);
+      if (!novoResultado.includes("_")) {
+        finalizarJogo("ganhou");
       }
-    } else if (tentativasErradas < maxErros) {
+    } else {
       tentativasErradas++;
-      console.log(tentativasErradas);
       setForca(forcas[tentativasErradas]);
-      if (tentativasErradas === forcas.length - 1) {
-        console.log("FIM DE JOGO - PERDEU");
-        terminoDeJogo = true;
-        setLetrasClicadas([...alfabeto]);
-        setResultado(palavraArray.map((letra) => letra));
-        setPerdeu(true);
+      console.log(tentativasErradas);
+      if (tentativasErradas === maxErros) {
+        finalizarJogo("perdeu");
       }
-      console.log(resultado);
     }
   };
 
   const chutar = () => {
-    console.log(textoChute);
     if (textoChute) {
-      setResultado(palavraArray.map((letra) => letra));
       if (retiraAcento(textoChute) === retiraAcento(palavra)) {
-        console.log("FIM DE JOGO - GANHOU");
-        terminoDeJogo = true;
-        setLetrasClicadas([...alfabeto]);
-        setGanhou(true);
+        finalizarJogo("ganhou");
       } else {
-        console.log("FIM DE JOGO - PERDEU");
-        terminoDeJogo = true;
-        setForca(forcas[maxErros]);
-        setLetrasClicadas([...alfabeto]);
-        setPerdeu(true);
+        finalizarJogo("perdeu");
       }
     }
   };
@@ -185,9 +174,7 @@ export default function App() {
             <button
               key={index}
               className="alfabeto-letra "
-              onClick={() =>
-                tentativasErradas < maxErros ? sugestao(letra) : null
-              }
+              onClick={() => sugestao(letra)}
               disabled={letrasClicadas.includes(letra) ? true : false}
             >
               {letra.toUpperCase()}
@@ -201,17 +188,14 @@ export default function App() {
             onChange={(e) => setTextoChute(e.target.value)}
             value={textoChute}
             type="text"
-            disabled={!iniciou}
           ></input>
           <input
             className="input-btn btn"
             onClick={chutar}
-            disabled={!iniciou | terminoDeJogo}
+            disabled={!iniciou | perdeu | ganhou}
             value="Chutar"
             type="Submit"
-          >
-            {/* Chutar */}
-          </input>
+          ></input>
         </div>
       </section>
     </div>
