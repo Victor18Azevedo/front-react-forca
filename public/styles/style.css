@@ -67,9 +67,18 @@ strong {
 }
 
 .resultado-letra {
-  font-size: 2rem;
+  text-align: center;
+  font-size: 2.5rem;
   font-weight: 700;
-  padding: 10px;
+  flex: 1 0 35px;
+}
+
+.resultado--errado {
+  color: rgb(128, 16, 16);
+}
+
+.resultado--certo {
+  color: rgb(16, 128, 16);
 }
 
 .box--inferior {
