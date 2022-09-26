@@ -83,10 +83,8 @@ export default function App() {
     setResultado(palavraArray.map((letra) => letra));
     setLetrasClicadas([...alfabeto]);
     if (status === "ganhou") {
-      console.log("FIM DE JOGO - GANHOU");
       setGanhou(true);
     } else {
-      console.log("FIM DE JOGO - PERDEU");
       setForca(forcas[maxErros]);
       setPerdeu(true);
     }
@@ -103,7 +101,6 @@ export default function App() {
     setResultado(novaPalavraArray.map(() => "_"));
 
     condicaoInicial();
-    console.log(palavra);
   };
 
   const sugestao = (letraSugerida) => {
@@ -125,7 +122,6 @@ export default function App() {
     } else {
       tentativasErradas++;
       setForca(forcas[tentativasErradas]);
-      console.log(tentativasErradas);
       if (tentativasErradas === maxErros) {
         finalizarJogo("perdeu");
       }
@@ -143,14 +139,23 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    <>
       <section className="box--superior">
-        <img src={forca} className="forca-img" alt="Forca" />
-        <div className="forca-opcoes">
-          <button className="forca-btn-iniciar btn" onClick={iniciarJogo}>
+        <img
+          src={forca}
+          className="forca-img"
+          alt="Forca"
+          data-identifier="game-image"
+        />
+        <aside className="forca-opcoes">
+          <button
+            className="forca-btn-iniciar btn"
+            onClick={iniciarJogo}
+            data-identifier="choose-word"
+          >
             Escolher Palavra
           </button>
-          <div className="forca-resultado">
+          <div className="forca-resultado" data-identifier="word">
             {iniciou
               ? resultado.map((letra, index) => (
                   <span
@@ -166,7 +171,7 @@ export default function App() {
                 ))
               : ""}
           </div>
-        </div>
+        </aside>
       </section>
       <section className="box--inferior">
         <div className="box-alfabeto">
@@ -176,6 +181,7 @@ export default function App() {
               className="alfabeto-letra "
               onClick={() => sugestao(letra)}
               disabled={letrasClicadas.includes(letra) ? true : false}
+              data-identifier="letter"
             >
               {letra.toUpperCase()}
             </button>
@@ -188,6 +194,7 @@ export default function App() {
             onChange={(e) => setTextoChute(e.target.value)}
             value={textoChute}
             type="text"
+            data-identifier="type-guess"
           ></input>
           <input
             className="input-btn btn"
@@ -195,9 +202,10 @@ export default function App() {
             disabled={!iniciou | perdeu | ganhou}
             value="Chutar"
             type="Submit"
+            data-identifier="guess-button"
           ></input>
         </div>
       </section>
-    </div>
+    </>
   );
 }

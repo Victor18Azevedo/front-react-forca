@@ -7,14 +7,10 @@ html {
 }
 
 body {
-  height: 100vh;
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto Mono", monospace, sans-serif;
   font-weight: 400;
   color: #262626;
-  background-color: rgb(250, 250, 250);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: rgb(200, 200, 200);
 }
 
 strong {
@@ -22,19 +18,15 @@ strong {
 }
 
 .btn {
-  padding: 2px 10px;
+  font-family: "Roboto", sans-serif;
+  padding: 0 10px;
 }
 
 .root {
-  flex: 0 1 945px;
-  height: 80vh;
-}
-
-.app {
-  width: 100%;
-  height: 100%;
+  max-width: 945px;
+  margin: 10vh auto;
+  padding: 1rem 2rem;
   background-color: wheat;
-  padding: 15px;
 }
 
 .box--superior {
@@ -43,6 +35,10 @@ strong {
   display: flex;
   justify-content: space-between;
   align-content: stretch;
+}
+
+.forca-img {
+  height: 40vh;
 }
 
 .forca-opcoes {
@@ -57,20 +53,23 @@ strong {
   background-color: green;
   color: rgb(250, 250, 250);
   font-size: 1rem;
+  line-height: 2rem;
+  letter-spacing: 0.0575rem;
   font-weight: 700;
   border-radius: 5px;
 }
 
 .forca-resultado {
+  height: 30px;
   display: flex;
   justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 .resultado-letra {
   text-align: center;
   font-size: 2.5rem;
   font-weight: 700;
-  flex: 1 0 35px;
 }
 
 .resultado--errado {
@@ -82,17 +81,17 @@ strong {
 }
 
 .box--inferior {
+  max-width: 575px;
   margin: 0 auto;
-  padding: 0 15%;
 }
 
 .box-alfabeto {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 1rem;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin-top: 1.25rem;
 }
 
 .alfabeto-letra {
@@ -123,8 +122,23 @@ strong {
   }
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 420px) {
   html {
     font-size: 12px;
+  }
+
+  .box--superior {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .forca-opcoes {
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .box-input {
+    flex-direction: column;
   }
 }
